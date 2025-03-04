@@ -911,10 +911,8 @@ $total_messages = $message_data['total_messages'];
             <?php endif; ?>
         </ul>
     </nav>
-</div>
-
-    <!-- Upload Sermons -->
-    <div class="sermons_card shadow-lg p-4">
+     <!-- Upload Sermons -->
+     <div class="sermons_card shadow-lg p-4">
         <h3 class="text-center mb-4">Upload Sermon</h3>
         <form action="upload_sermon.php" method="POST" enctype="multipart/form-data">
             <div class="mb-3">
@@ -945,6 +943,8 @@ $total_messages = $message_data['total_messages'];
             <button type="submit" class="btn btn-primary w-100">Upload Sermon</button>
         </form>
     </div>
+
+</div>
 
 </div>
 
