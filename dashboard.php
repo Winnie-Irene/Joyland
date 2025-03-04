@@ -270,7 +270,7 @@ $total_messages = $message_data['total_messages'];
         echo '<a href="#" class="menu-item" data-section="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a>';
         echo '<a href="#" class="menu-item" data-section="messages"><i class="fas fa-envelope"></i> Messages</a>';
         echo '<a href="#" class="menu-item" data-section="announcements"><i class="fas fa-bullhorn"></i> Announcements</a>';
-        echo '<a href="#" class="menu-item" data-section="reports"><i class="fas fa-book"></i> Reports</a>';
+        echo '<a href="reports.php"><i class="fas fa-book"></i> Reports</a>';
         echo '<hr>' ;
         echo '<a href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>';
     }
@@ -279,7 +279,7 @@ $total_messages = $message_data['total_messages'];
     if ($role == 'Treasurer') {
         echo '<a href="#" class="menu-item" data-section="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a>';
         echo '<a href="#" class="menu-item" data-section="donations"><i class="fas fa-donate"></i> Donations</a>';
-        echo '<a href="#" class="menu-item" data-section="reports"><i class="fas fa-book"></i> Reports</a>';
+        echo '<a href="reports.php"><i class="fas fa-book"></i> Reports</a>';
         echo '<hr>' ;
         echo '<a href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>';
     }
@@ -288,7 +288,7 @@ $total_messages = $message_data['total_messages'];
     if ($role == 'Ministry Leader') {
         echo '<a href="#" class="menu-item" data-section="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a>';
         echo '<a href="#" class="menu-item" data-section="members"><i class="fas fa-users"></i> Ministry Members</a>';
-        echo '<a href="#" class="menu-item" data-section="reports"><i class="fas fa-book"></i> Reports</a>';
+        echo '<a href="reports.php"><i class="fas fa-book"></i> Reports</a>';
         echo '<hr>' ;
         echo '<a href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>';
     }
@@ -403,7 +403,7 @@ $total_messages = $message_data['total_messages'];
     </table>
     </div>
 
-        <!-- Donations -->
+<!-- Donations -->
 <div id="donations" class="section hidden mt-4">
     <div class="col-md-3">
         <div class="card bg-primary text-white p-3">
