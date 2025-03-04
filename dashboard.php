@@ -403,17 +403,38 @@ $total_messages = $message_data['total_messages'];
     </table>
     </div>
 
-        <!-- Donations-->
-        <div id="donations" class="section hidden mt-4">
-            <div class="col-md-3">
-                  <div class="card bg-primary text-white p-3">
-                    <h5>Donations</h5>
-                    <p>Total Amount: Ksh. <strong><?php echo number_format($total_donation_amount, 2); ?></strong></p>
-                  </div>
-            </div>
-            <h3 style="margin-top: 30px;">Donations</h3>
-            <table class="table table-bordered">
-            <thead>
+        <!-- Donations -->
+<div id="donations" class="section hidden mt-4">
+    <div class="col-md-3">
+        <div class="card bg-primary text-white p-3">
+            <h5>Donations</h5>
+            <p>Total Amount: Ksh. <strong><?php echo number_format($total_donation_amount, 2); ?></strong></p>
+        </div>
+    </div>
+    <h3 style="margin-top: 30px;">Donations</h3>
+
+    <?php
+    include 'db.php';
+
+    // Pagination Setup
+    $records_per_page = 10;
+    $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+    $offset = ($page - 1) * $records_per_page;
+
+    // Count total records
+    $total_query = "SELECT COUNT(*) as total FROM donations";
+    $total_result = $conn->query($total_query);
+    $total_row = $total_result->fetch_assoc();
+    $total_records = $total_row['total'];
+    $total_pages = ceil($total_records / $records_per_page);
+
+    // Fetch limited records per page
+    $sql = "SELECT id, name, amount, donation_date FROM donations ORDER BY donation_date DESC LIMIT $records_per_page OFFSET $offset";
+    $result = $conn->query($sql);
+    ?>
+
+    <table class="table table-bordered">
+        <thead>
             <tr>
                 <th>ID</th>
                 <th>Name</th>
@@ -423,11 +444,6 @@ $total_messages = $message_data['total_messages'];
         </thead>
         <tbody>
             <?php
-            include 'db.php';
-
-            $sql = "SELECT id, name, amount, donation_date FROM donations ORDER BY donation_date DESC";
-            $result = $conn->query($sql);
-
             if ($result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {
                     echo "<tr>
@@ -442,20 +458,61 @@ $total_messages = $message_data['total_messages'];
             }
             ?>
         </tbody>
-            </table>
-        </div>
+    </table>
+
+    <!-- Bootstrap Pagination -->
+    <nav>
+        <ul class="pagination">
+            <?php if ($page > 1) { ?>
+                <li class="page-item"><a class="page-link" href="?page=<?php echo $page - 1; ?>">Previous</a></li>
+            <?php } ?>
+
+            <?php for ($i = 1; $i <= $total_pages; $i++) { ?>
+                <li class="page-item <?php if ($i == $page) echo 'active'; ?>">
+                    <a class="page-link" href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                </li>
+            <?php } ?>
+
+            <?php if ($page < $total_pages) { ?>
+                <li class="page-item"><a class="page-link" href="?page=<?php echo $page + 1; ?>">Next</a></li>
+            <?php } ?>
+        </ul>
+    </nav>
+</div>
+
         
-        <!-- Prayer Requests-->
-        <div id="prayers" class="section hidden mt-4">
-            <div class="col-md-3">
-                  <div class="card bg-success text-white p-3">
-                    <h5>Prayer Requests</h5>
-                    <p><span id="prayer-count"><?php echo $total_prayers; ?></span> prayer requests</p>
-                  </div>
-            </div>
-            <h3 style="margin-top: 30px;">Prayer Requests</h3>
-            <table class="table table-bordered">
-            <thead>
+<!-- Prayer Requests -->
+<div id="prayers" class="section hidden mt-4">
+    <div class="col-md-3">
+        <div class="card bg-success text-white p-3">
+            <h5>Prayer Requests</h5>
+            <p><span id="prayer-count"><?php echo $total_prayers; ?></span> prayer requests</p>
+        </div>
+    </div>
+    <h3 style="margin-top: 30px;">Prayer Requests</h3>
+
+    <?php
+    include 'db.php';
+
+    // Pagination Setup
+    $records_per_page = 10;
+    $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+    $offset = ($page - 1) * $records_per_page;
+
+    // Count total records
+    $total_query = "SELECT COUNT(*) as total FROM prayer_requests";
+    $total_result = $conn->query($total_query);
+    $total_row = $total_result->fetch_assoc();
+    $total_records = $total_row['total'];
+    $total_pages = ceil($total_records / $records_per_page);
+
+    // Fetch limited records per page
+    $sql = "SELECT id, name, prayer, created_at FROM prayer_requests ORDER BY id DESC LIMIT $records_per_page OFFSET $offset";
+    $result = $conn->query($sql);
+    ?>
+
+    <table class="table table-bordered">
+        <thead>
             <tr>
                 <th>ID</th>
                 <th>Name</th>
@@ -465,11 +522,6 @@ $total_messages = $message_data['total_messages'];
         </thead>
         <tbody>
             <?php
-            include 'db.php';
-
-            $sql = "SELECT id, name, prayer, created_at FROM prayer_requests ORDER BY id DESC";
-            $result = $conn->query($sql);
-
             if ($result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {
                     echo "<tr>
@@ -484,20 +536,60 @@ $total_messages = $message_data['total_messages'];
             }
             ?>
         </tbody>
-            </table>
-        </div>
+    </table>
 
-        <!-- Ministry Members-->
-        <div id="members" class="section hidden mt-4">
-            <div class="col-md-3">
-                  <div class="card bg-warning text-white p-3">
-                    <h5>Ministry Members</h5>
-                    <p><span id="member-count"><?php echo $total_members; ?></span> ministry registrations</p>
-                  </div>
-            </div>
-            <h3 style="margin-top: 30px;">Ministry Members</h3>
-            <table class="table table-bordered">
-            <thead>
+    <!-- Bootstrap Pagination -->
+    <nav>
+        <ul class="pagination">
+            <?php if ($page > 1) { ?>
+                <li class="page-item"><a class="page-link" href="?page=<?php echo $page - 1; ?>">Previous</a></li>
+            <?php } ?>
+
+            <?php for ($i = 1; $i <= $total_pages; $i++) { ?>
+                <li class="page-item <?php if ($i == $page) echo 'active'; ?>">
+                    <a class="page-link" href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                </li>
+            <?php } ?>
+
+            <?php if ($page < $total_pages) { ?>
+                <li class="page-item"><a class="page-link" href="?page=<?php echo $page + 1; ?>">Next</a></li>
+            <?php } ?>
+        </ul>
+    </nav>
+</div>
+
+        <!-- Ministry Members -->
+<div id="members" class="section hidden mt-4">
+    <div class="col-md-3">
+        <div class="card bg-warning text-white p-3">
+            <h5>Ministry Members</h5>
+            <p><span id="member-count"><?php echo $total_members; ?></span> ministry registrations</p>
+        </div>
+    </div>
+    <h3 style="margin-top: 30px;">Ministry Members</h3>
+
+    <?php
+    include 'db.php';
+
+    // Pagination Setup
+    $records_per_page = 10;
+    $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+    $offset = ($page - 1) * $records_per_page;
+
+    // Count total records
+    $total_query = "SELECT COUNT(*) as total FROM ministries";
+    $total_result = $conn->query($total_query);
+    $total_row = $total_result->fetch_assoc();
+    $total_records = $total_row['total'];
+    $total_pages = ceil($total_records / $records_per_page);
+
+    // Fetch limited records per page
+    $sql = "SELECT id, name, ministry, registered_at FROM ministries ORDER BY id DESC LIMIT $records_per_page OFFSET $offset";
+    $result = $conn->query($sql);
+    ?>
+
+    <table class="table table-bordered">
+        <thead>
             <tr>
                 <th>ID</th>
                 <th>Name</th>
@@ -506,12 +598,7 @@ $total_messages = $message_data['total_messages'];
             </tr>
         </thead>
         <tbody>
-           <?php
-            include 'db.php';
-
-            $sql = "SELECT id, name, ministry, registered_at FROM ministries ORDER BY id DESC";
-            $result = $conn->query($sql);
-
+            <?php
             if ($result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {
                     echo "<tr>
@@ -522,24 +609,67 @@ $total_messages = $message_data['total_messages'];
                           </tr>";
                 }
             } else {
-                echo "<tr><td colspan='4' class='text-center'>No requests found</td></tr>";
+                echo "<tr><td colspan='4' class='text-center'>No ministry members found</td></tr>";
             }
-            ?> 
+            ?>
         </tbody>
-            </table>
+    </table>
+
+    <!-- Bootstrap Pagination -->
+    <nav>
+        <ul class="pagination">
+            <?php if ($page > 1) { ?>
+                <li class="page-item"><a class="page-link" href="?page=<?php echo $page - 1; ?>">Previous</a></li>
+            <?php } ?>
+
+            <?php for ($i = 1; $i <= $total_pages; $i++) { ?>
+                <li class="page-item <?php if ($i == $page) echo 'active'; ?>">
+                    <a class="page-link" href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                </li>
+            <?php } ?>
+
+            <?php if ($page < $total_pages) { ?>
+                <li class="page-item"><a class="page-link" href="?page=<?php echo $page + 1; ?>">Next</a></li>
+            <?php } ?>
+        </ul>
+    </nav>
+</div>
+
+       <!-- Messages section -->
+<div id="messages" class="section hidden mt-4">
+    <div class="col-md-3">
+        <div class="card bg-info text-white p-3">
+            <h5>Messages</h5>
+            <p><span id="message-count"><?php echo $total_messages; ?></span> messages received</p>
         </div>
-        
-        <!-- Messages section -->
-        <div id="messages" class="section hidden mt-4">
-            <div class="col-md-3">
-                  <div class="card bg-info text-white p-3">
-                    <h5>Messages</h5>
-                    <p><span id="message-count"><?php echo $total_messages; ?></span> messages received</p>
-                  </div>
-            </div>    
-            <h3 style="margin-top: 30px;">Messages</h3>
-            <table class="table table-bordered">
-            <thead>
+    </div>    
+    <h3 style="margin-top: 30px;">Messages</h3>
+
+    <?php
+    include 'db.php';
+
+    // Pagination Setup
+    $records_per_page = 10;
+    $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+    $offset = ($page - 1) * $records_per_page;
+
+    // Count total records
+    $total_query = "SELECT COUNT(*) as total FROM contactus";
+    $total_result = $conn->query($total_query);
+    $total_row = $total_result->fetch_assoc();
+    $total_records = $total_row['total'];
+    $total_pages = ceil($total_records / $records_per_page);
+
+    // Fetch limited records per page
+    $sql = "SELECT MessageID, FirstName, LastName, Message, Message_Date 
+            FROM contactus 
+            ORDER BY MessageID DESC 
+            LIMIT $records_per_page OFFSET $offset";
+    $result = $conn->query($sql);
+    ?>
+
+    <table class="table table-bordered">
+        <thead>
             <tr>
                 <th>ID</th>
                 <th>First Name</th>
@@ -550,11 +680,6 @@ $total_messages = $message_data['total_messages'];
         </thead>
         <tbody>
             <?php
-            include 'db.php';
-
-            $sql = "SELECT MessageID, FirstName, LastName, Message, Message_Date FROM contactus ORDER BY MessageID DESC";
-            $result = $conn->query($sql);
-
             if ($result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {
                     echo "<tr>
@@ -566,27 +691,61 @@ $total_messages = $message_data['total_messages'];
                           </tr>";
                 }
             } else {
-                echo "<tr><td colspan='4' class='text-center'>No requests found</td></tr>";
+                echo "<tr><td colspan='5' class='text-center'>No messages found</td></tr>";
             }
             ?>
         </tbody>
-            </table>
-        </div>
+    </table>
+
+    <!-- Bootstrap Pagination -->
+    <nav>
+        <ul class="pagination">
+            <?php if ($page > 1) { ?>
+                <li class="page-item"><a class="page-link" href="?page=<?php echo $page - 1; ?>">Previous</a></li>
+            <?php } ?>
+
+            <?php for ($i = 1; $i <= $total_pages; $i++) { ?>
+                <li class="page-item <?php if ($i == $page) echo 'active'; ?>">
+                    <a class="page-link" href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                </li>
+            <?php } ?>
+
+            <?php if ($page < $total_pages) { ?>
+                <li class="page-item"><a class="page-link" href="?page=<?php echo $page + 1; ?>">Next</a></li>
+            <?php } ?>
+        </ul>
+    </nav>
+</div>
 
         <!-- Announcements section -->
-        <div id="announcements" class="section hidden">
-            <div class="col-md-3 mt-3">
-                <div class="card bg-secondary text-white p-3">
-                        <h5>Announcements</h5>
-                        <p>Post and manage announcements</p>
-                </div>
+<div id="announcements" class="section hidden">
+    <div class="col-md-3 mt-3">
+        <div class="card bg-secondary text-white p-3">
+            <h5>Announcements</h5>
+            <p>Post and manage announcements</p>
         </div>
+    </div>
+
     <!-- Bootstrap Alert for Notifications -->
     <div id="alertBox" class="alert" style="display: none;"></div>
 
-    <!-- Fetch all announcements -->
     <?php
-    $query = "SELECT * FROM announcements ORDER BY created_at DESC";
+    include 'db.php';
+
+    // Pagination settings
+    $limit = 5; // Change this to adjust how many announcements per page
+    $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+    $start = ($page - 1) * $limit;
+
+    // Get total announcements count
+    $total_query = "SELECT COUNT(*) AS total FROM announcements";
+    $total_result = $conn->query($total_query);
+    $total_row = $total_result->fetch_assoc();
+    $total_announcements = $total_row['total'];
+    $total_pages = ceil($total_announcements / $limit);
+
+    // Fetch paginated announcements
+    $query = "SELECT * FROM announcements ORDER BY created_at DESC LIMIT $start, $limit";
     $result = mysqli_query($conn, $query);
     ?>
 
@@ -617,6 +776,29 @@ $total_messages = $message_data['total_messages'];
         </tbody>
     </table>
 
+    <!-- Pagination -->
+    <nav>
+        <ul class="pagination justify-content-center">
+            <?php if ($page > 1): ?>
+                <li class="page-item">
+                    <a class="page-link" href="?page=<?= $page - 1; ?>">Previous</a>
+                </li>
+            <?php endif; ?>
+
+            <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                <li class="page-item <?= ($i == $page) ? 'active' : ''; ?>">
+                    <a class="page-link" href="?page=<?= $i; ?>"><?= $i; ?></a>
+                </li>
+            <?php endfor; ?>
+
+            <?php if ($page < $total_pages): ?>
+                <li class="page-item">
+                    <a class="page-link" href="?page=<?= $page + 1; ?>">Next</a>
+                </li>
+            <?php endif; ?>
+        </ul>
+    </nav>
+
     <!-- Add Announcements -->
     <h2 class="text-center mb-4" style="margin-top: 50px;">Post a New Announcement</h2>
     <form id="announcementForm" class="p-4 bg-light rounded shadow-sm">
@@ -632,16 +814,18 @@ $total_messages = $message_data['total_messages'];
 
         <button type="submit" class="btn btn-primary w-100">Post Announcement</button>
     </form>
-    </div>
+</div>
+
 
 <!-- Sermons Section -->
 <div id="sermons" class="section hidden"> 
-        <div class="col-md-3 mt-3">
-                <div class="card bg-danger text-white p-3">
-                        <h5>Sermons</h5>
-                        <p>Upload and manage sermons</p>
-                </div>
-            </div>           
+    <div class="col-md-3 mt-3">
+        <div class="card bg-danger text-white p-3">
+            <h5>Sermons</h5>
+            <p>Upload and manage sermons</p>
+        </div>
+    </div>           
+
     <!-- Display Bootstrap Alert if set -->
     <?php
     if (isset($_SESSION['alert'])) {
@@ -654,9 +838,23 @@ $total_messages = $message_data['total_messages'];
     }
     ?>
 
-    <!-- Fetch all sermons -->
     <?php
-    $query = "SELECT * FROM sermons ORDER BY created_at DESC";
+    include 'db.php';
+
+    // Pagination settings
+    $limit = 5; // Change this to adjust how many sermons per page
+    $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+    $start = ($page - 1) * $limit;
+
+    // Get total sermons count
+    $total_query = "SELECT COUNT(*) AS total FROM sermons";
+    $total_result = $conn->query($total_query);
+    $total_row = $total_result->fetch_assoc();
+    $total_sermons = $total_row['total'];
+    $total_pages = ceil($total_sermons / $limit);
+
+    // Fetch paginated sermons
+    $query = "SELECT * FROM sermons ORDER BY created_at DESC LIMIT $start, $limit";
     $result = mysqli_query($conn, $query);
     ?>
     
@@ -690,6 +888,30 @@ $total_messages = $message_data['total_messages'];
         <?php endwhile; ?>
         </tbody>
     </table>
+
+    <!-- Pagination -->
+    <nav>
+        <ul class="pagination justify-content-center">
+            <?php if ($page > 1): ?>
+                <li class="page-item">
+                    <a class="page-link" href="?page=<?= $page - 1; ?>">Previous</a>
+                </li>
+            <?php endif; ?>
+
+            <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                <li class="page-item <?= ($i == $page) ? 'active' : ''; ?>">
+                    <a class="page-link" href="?page=<?= $i; ?>"><?= $i; ?></a>
+                </li>
+            <?php endfor; ?>
+
+            <?php if ($page < $total_pages): ?>
+                <li class="page-item">
+                    <a class="page-link" href="?page=<?= $page + 1; ?>">Next</a>
+                </li>
+            <?php endif; ?>
+        </ul>
+    </nav>
+</div>
 
     <!-- Upload Sermons -->
     <div class="sermons_card shadow-lg p-4">
