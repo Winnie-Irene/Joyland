@@ -273,6 +273,10 @@
                         <input type="text" class="form-control" id="name" name="name" required>
                     </div>
                     <div class="mb-3">
+                        <label for="phone" class="form-label" style="font-weight: bold;">Phone Number</label>
+                        <input type="tel" class="form-control" id="phone" name="phone" placeholder="e.g.: +254 712 345 678">
+                    </div>
+                    <div class="mb-3">
                         <label for="email" class="form-label">Email (Optional)</label>
                         <input type="email" class="form-control" id="email" name="email">
                     </div>
