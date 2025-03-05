@@ -1,7 +1,7 @@
 <?php
 function getAccessToken() {
-    $consumerKey = 'RVc6ucfOSrxOy4tc2yCJTzH3NQy3VOZFvKXdWN6lzm6tdPW2'; // Replace with your Daraja API Consumer Key
-    $consumerSecret = 'N6wpq5UZT7wsH9EtvZwQCgGGQM15Nh3JxMscCmKvfCGz3FOZ2ZweBgRnmPHywbDL'; // Replace with your Daraja API Consumer Secret
+    $consumerKey = 'RVc6ucfOSrxOy4tc2yCJTzH3NQy3VOZFvKXdWN6lzm6tdPW2'; 
+    $consumerSecret = 'N6wpq5UZT7wsH9EtvZwQCgGGQM15Nh3JxMscCmKvfCGz3FOZ2ZweBgRnmPHywbDL'; 
     $credentials = base64_encode($consumerKey . ":" . $consumerSecret);
 
     $url = "https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials";
@@ -10,7 +10,7 @@ function getAccessToken() {
     $curl = curl_init($url);
     curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); // Ignore SSL verification
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
     $response = curl_exec($curl);
     if (curl_errno($curl)) {
@@ -33,8 +33,8 @@ function stkPush($phone, $amount, $description) {
     }
 
     $url = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest";
-    $businessShortCode = '174379'; // Testing short code
-    $lipaNaMpesaPasskey = 'bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919'; // Replace with actual passkey
+    $businessShortCode = '174379';
+    $lipaNaMpesaPasskey = 'bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919';
     $timestamp = date("YmdHis");
     $password = base64_encode($businessShortCode . $lipaNaMpesaPasskey . $timestamp);
 
@@ -49,7 +49,7 @@ function stkPush($phone, $amount, $description) {
         'BusinessShortCode' => $businessShortCode,
         'Password' => $password,
         'Timestamp' => $timestamp,
-        'TransactionType' => 'CustomerBuyGoodsOnline', // Correct transaction type for personal number
+        'TransactionType' => 'CustomerBuyGoodsOnline',
         'Amount' => $amount,
         'PartyA' => $phone,
         'PartyB' => $businessShortCode,
@@ -69,7 +69,7 @@ function stkPush($phone, $amount, $description) {
     curl_setopt($curl, CURLOPT_POST, true);
     curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($postData));
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); // Ignore SSL verification
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
     $response = curl_exec($curl);
     if (curl_errno($curl)) {

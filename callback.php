@@ -1,5 +1,5 @@
 <?php
-require 'db.php'; // Ensure this file contains valid database connection details
+require 'db.php';
 
 $data = file_get_contents('php://input');
 $logFile = "mpesa_response.log";
@@ -17,7 +17,6 @@ if ($response && isset($response['Body']['stkCallback'])) {
         $amount = $callback['CallbackMetadata']['Item'][0]['Value'] ?? 0;
         $transactionDate = date('Y-m-d H:i:s');
 
-        // Store transaction in the database
         $stmt = $conn->prepare("INSERT INTO donations (amount, trancation_code, phone, title, date_created) VALUES (?, ?, ?, ?, ?)");
         $title = "Donation";
         $stmt->bind_param("dssss", $amount, $mpesaReceiptNumber, $phoneNumber, $title, $transactionDate);

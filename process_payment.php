@@ -18,9 +18,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $response = stkPush($phone, $amount, $email);
 
     if (isset($response['ResponseCode']) && $response['ResponseCode'] == "0") {
-        echo "success"; // Return success instead of redirecting
+        echo "success"; // Return success
     } else {
-        echo "error"; // Return error instead of redirecting
+        echo "error"; // Return error
     }
     exit();
 }
