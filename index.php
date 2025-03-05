@@ -267,7 +267,7 @@
                 <div id="donationAlert" class="alert d-none" role="alert"></div>
 
                 <!-- Donation Form -->
-                <form action="process_donation.php" method="post" id="donationForm">
+                <form action="process_payment.php" method="post" id="donationForm">
                     <div class="mb-3">
                         <label for="name" class="form-label">Your Name</label>
                         <input type="text" class="form-control" id="name" name="name" required>
@@ -300,11 +300,11 @@ document.getElementById("donationForm").addEventListener("submit", function(even
 
     var formData = new FormData(this);
 
-    fetch("process_donation.php", {
+    fetch("process_payment.php", {
         method: "POST",
         body: formData
     })
-    .then(response => response.text())
+    .then(response => response.text())  // Expect text response
     .then(data => {
         let alertDiv = document.getElementById("donationAlert");
 
@@ -320,8 +320,9 @@ document.getElementById("donationForm").addEventListener("submit", function(even
             // Hide alert and close modal after 3 seconds
             setTimeout(() => {
                 alertDiv.classList.add("d-none");
-                var modal = bootstrap.Modal.getInstance(document.getElementById('donationModal'));
-                modal.hide();
+                var modalElement = document.getElementById('donationModal');
+                var modal = bootstrap.Modal.getInstance(modalElement);
+                if (modal) modal.hide();
             }, 3000);
         } else {
             // Show error message
@@ -330,7 +331,10 @@ document.getElementById("donationForm").addEventListener("submit", function(even
             alertDiv.classList.remove("d-none");
         }
     })
-    .catch(error => console.error("Error:", error));
+    .catch(error => {
+        console.error("Error:", error);
+        alert("An error occurred. Please try again.");
+    });
 });
 </script>
 
